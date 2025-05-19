@@ -1,7 +1,6 @@
 package com.shcho.myBlog.user.service;
 
 import com.shcho.myBlog.libs.exception.CustomException;
-import com.shcho.myBlog.libs.exception.ErrorCode;
 import com.shcho.myBlog.user.entity.User;
 import com.shcho.myBlog.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
