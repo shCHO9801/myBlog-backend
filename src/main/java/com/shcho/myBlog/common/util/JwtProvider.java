@@ -1,7 +1,11 @@
 package com.shcho.myBlog.common.util;
 
+import com.shcho.myBlog.libs.exception.CustomException;
+import com.shcho.myBlog.libs.exception.ErrorCode;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -9,13 +13,21 @@ import java.security.Key;
 import java.util.Date;
 
 @Component
-public class JwtFilter {
+public class JwtProvider {
 
-    private static final String SECRET_KEY = "sh-myBlog-shSecretKey";
+    @Value("${jwt.secret}")
+    private String secret;
+
+    private Key key;
     private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 24;
 
-    private final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
-
+    @PostConstruct
+    public void init() {
+        if(secret == null || secret.length() < 32){
+            throw new CustomException(ErrorCode.JWT_KEY_ERROR);
+        }
+        this.key = Keys.hmacShaKeyFor(secret.getBytes());
+    }
 
     public String createToken(String username, String role) {
         return Jwts.builder()
