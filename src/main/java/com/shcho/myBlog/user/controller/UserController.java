@@ -1,5 +1,7 @@
 package com.shcho.myBlog.user.controller;
 
+import com.shcho.myBlog.user.dto.UserLoginRequestDto;
+import com.shcho.myBlog.user.dto.UserLoginResponseDto;
 import com.shcho.myBlog.user.dto.UserSignUpRequestDto;
 import com.shcho.myBlog.user.dto.UserSignUpResponseDto;
 import com.shcho.myBlog.user.service.UserService;
@@ -22,5 +24,13 @@ public class UserController {
             @RequestBody UserSignUpRequestDto requestDto
     ) {
         return ResponseEntity.ok(userService.signUp(requestDto));
+    }
+
+
+    @PostMapping("/login")
+    public ResponseEntity<UserLoginResponseDto> login(
+            @RequestBody UserLoginRequestDto requestDto
+    ) {
+        return ResponseEntity.ok(userService.login(requestDto));
     }
 }
