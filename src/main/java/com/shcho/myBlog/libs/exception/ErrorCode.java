@@ -7,6 +7,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ErrorCode {
 
+    /* 400 */
+    USER_ALREADY_EXISTS(400, "이미 존재하는 사용자 입니다."),
+    NICKNAME_ALREADY_EXISTS(400, "이미 사용 중인 닉네임 입니다."),
+
     /* 404 NOT_FOUND */
     USER_NOT_FOUND(404, "유저를 찾을 수 없습니다."),
 
