@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: myBlog
+  config:
+    import: optional:dotenv:.env
+
+  datasource:
+    url: jdbc:mariadb://csh980116.synology.me:3306/shBlog
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect
+        format_sql: true
+    show_sql: true
+
+jwt:
+  secret: ${JWT_SECRET}
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql: trace
