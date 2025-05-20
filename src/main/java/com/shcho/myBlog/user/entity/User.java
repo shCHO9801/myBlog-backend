@@ -32,4 +32,8 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(50)")
     private Role role;
+
+    public void updateNickname(String newNickname) {
+        this.nickname = newNickname;
+    }
 }
