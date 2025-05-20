@@ -15,6 +15,7 @@ public enum ErrorCode {
     /* 401 */
     INVALID_CREDENTIAL(401, "아이디 또는 비밀번호가 올바르지 않습니다."),
     JWT_KEY_ERROR(401, "JWT secret 키가 올바르지 않습니다."),
+    INVALID_PASSWORD(401, "비밀번호가 일치하지 않습니다."),
 
     /* 404 NOT_FOUND */
     USER_NOT_FOUND(404, "유저를 찾을 수 없습니다."),
