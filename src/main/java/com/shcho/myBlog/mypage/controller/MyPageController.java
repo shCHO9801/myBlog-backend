@@ -2,6 +2,7 @@ package com.shcho.myBlog.mypage.controller;
 
 import com.shcho.myBlog.mypage.dto.GetMyPageResponseDto;
 import com.shcho.myBlog.mypage.dto.UpdateNicknameRequestDto;
+import com.shcho.myBlog.mypage.dto.UpdatePasswordRequestDto;
 import com.shcho.myBlog.mypage.service.MyPageService;
 import com.shcho.myBlog.user.service.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -38,5 +39,14 @@ public class MyPageController {
     ) {
         Long userId = userDetails.getUserId();
         return ResponseEntity.ok(myPageService.updateNickname(userId, request.nickname()));
+    }
+
+    @PatchMapping("/password")
+    public ResponseEntity<String> updatePassword(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestBody UpdatePasswordRequestDto request
+    ) {
+        Long userId = userDetails.getUserId();
+        return ResponseEntity.ok(myPageService.updatePassword(userId, request.currentPassword(), request.newPassword()));
     }
 }
