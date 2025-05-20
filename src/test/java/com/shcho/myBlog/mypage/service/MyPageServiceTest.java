@@ -10,15 +10,20 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static com.shcho.myBlog.libs.exception.ErrorCode.DUPLICATE_NICKNAME;
+import static com.shcho.myBlog.libs.exception.ErrorCode.INVALID_PASSWORD;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class MyPageServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private MyPageService myPageService;
@@ -28,7 +33,7 @@ class MyPageServiceTest {
     }
 
     @Test
-    @DisplayName("닉네임이 존재할 경우 true 반환")
+    @DisplayName("닉네임이 존재 여부 - 존재할 경우 true 반환")
     void existsNicknameTrue() {
         // given
         String nickname = "nickname1";
@@ -42,7 +47,7 @@ class MyPageServiceTest {
     }
 
     @Test
-    @DisplayName("닉네임이 존재하지 않을 경우 false 반환")
+    @DisplayName("닉네임이 존재 여부 - 존재하지 않을 경우 false 반환")
     void existsNicknameFalse() {
         // given
         String nickname = "nonExistNickname";
@@ -94,10 +99,63 @@ class MyPageServiceTest {
         when(userRepository.existsByNickname(newNickname)).thenReturn(true);
         when(userRepository.getReferenceById(userId)).thenReturn(user);
 
-        // when&&then
+        // when & then
         CustomException exception = assertThrows(CustomException.class,
                 () -> myPageService.updateNickname(userId, newNickname));
 
         assertEquals(DUPLICATE_NICKNAME, exception.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("비밀번호 변경 - 현재 비밀번호 일치 시 변경 성공")
+    void updatePasswordSuccess() {
+        // given
+        Long userId = 1L;
+        String currentPassword = "oldPassword";
+        String newPassword = "newPassword";
+
+        User user = User.builder()
+                .username("username")
+                .password("encoded_old_password")
+                .nickname("nickname")
+                .role(Role.USER)
+                .build();
+
+        when(userRepository.getReferenceById(userId)).thenReturn(user);
+        when(passwordEncoder.matches(currentPassword, user.getPassword())).thenReturn(true);
+        when(passwordEncoder.encode(newPassword)).thenReturn("encoded_new_password");
+
+        // when
+        String result = myPageService.updatePassword(userId, currentPassword, newPassword);
+
+        // then
+        assertEquals("비밀번호가 성공적으로 변경되었습니다.", result);
+        verify(userRepository).save(user);
+    }
+
+    @Test
+    @DisplayName("비밀번호 변경 - 현재 비밀번호 불일치 시 예외 발생")
+    void updatePasswordFail() {
+        // given
+        Long userId = 1L;
+        String currentPassword = "wrongPassword";
+        String newPassword = "newPassword";
+
+        User user = User.builder()
+                .username("username")
+                .password("encoded_old_password")
+                .nickname("nickname")
+                .role(Role.USER)
+                .build();
+
+        when(userRepository.getReferenceById(userId)).thenReturn(user);
+        when(passwordEncoder.matches(currentPassword, user.getPassword())).thenReturn(false);
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class,
+                () -> myPageService.updatePassword(userId, currentPassword, newPassword));
+
+        assertEquals(INVALID_PASSWORD, exception.getErrorCode());
+        verify(userRepository, never()).save(any());
     }
 }
