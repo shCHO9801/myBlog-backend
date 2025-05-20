@@ -10,6 +10,7 @@ public enum ErrorCode {
     /* 400 */
     USER_ALREADY_EXISTS(400, "이미 존재하는 사용자 입니다."),
     NICKNAME_ALREADY_EXISTS(400, "이미 사용 중인 닉네임 입니다."),
+    DUPLICATE_NICKNAME(400, "중복된 닉네임 입니다."),
 
     /* 401 */
     INVALID_CREDENTIAL(401, "아이디 또는 비밀번호가 올바르지 않습니다."),
