@@ -1,6 +1,7 @@
 package com.shcho.myBlog.user.service;
 
 import com.shcho.myBlog.libs.exception.CustomException;
+import com.shcho.myBlog.libs.exception.ErrorCode;
 import com.shcho.myBlog.user.entity.User;
 import com.shcho.myBlog.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,10 @@ public class CustomUserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+
+        if(user.isDeleted()) {
+            throw new CustomException(ErrorCode.DELETED_USER_CANNOT_LOGIN);
+        }
 
         return new CustomUserDetails(user);
     }
