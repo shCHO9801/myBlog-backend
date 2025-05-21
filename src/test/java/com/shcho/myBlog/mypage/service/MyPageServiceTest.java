@@ -1,7 +1,6 @@
 package com.shcho.myBlog.mypage.service;
 
 import com.shcho.myBlog.libs.exception.CustomException;
-import com.shcho.myBlog.libs.exception.ErrorCode;
 import com.shcho.myBlog.user.entity.Role;
 import com.shcho.myBlog.user.entity.User;
 import com.shcho.myBlog.user.repository.UserRepository;
@@ -157,5 +156,31 @@ class MyPageServiceTest {
 
         assertEquals(INVALID_PASSWORD, exception.getErrorCode());
         verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("회원탈퇴 - 정상 처리 시 deletedAt, username, password, nickname 변경")
+    void withdrawSuccess() {
+        // given
+        Long userId = 1L;
+
+        User user = User.builder()
+                .username("username")
+                .password("password")
+                .nickname("nickname")
+                .role(Role.USER)
+                .build();
+
+        when(userRepository.getReferenceById(userId)).thenReturn(user);
+
+        // when
+        myPageService.withdraw(userId);
+
+        // then
+        assertNotNull(user.getDeletedAt());
+        assertNull(user.getUsername());
+        assertEquals("", user.getPassword());
+        assertNull(user.getNickname());
+        verify(userRepository).save(user);
     }
 }
