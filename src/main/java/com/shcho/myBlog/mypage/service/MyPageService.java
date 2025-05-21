@@ -51,4 +51,12 @@ public class MyPageService {
 
         return "비밀번호가 성공적으로 변경되었습니다.";
     }
+
+    public String withdraw(Long userId) {
+        User user = userRepository.getReferenceById(userId);
+        user.withdraw();
+        userRepository.save(user);
+
+        return "회원 탈퇴가 완료되었습니다.";
+    }
 }
