@@ -2,7 +2,6 @@ package com.shcho.myBlog.user.entity;
 
 import com.shcho.myBlog.libs.entity.BaseEntity;
 import com.shcho.myBlog.libs.exception.CustomException;
-import com.shcho.myBlog.libs.exception.ErrorCode;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -51,7 +50,7 @@ public class User extends BaseEntity {
     }
 
     public void withdraw() {
-        if(this.deletedAt != null) {
+        if (this.deletedAt != null) {
             throw new CustomException(ALREADY_DELETED_USER);
         }
         this.deletedAt = LocalDateTime.now();
