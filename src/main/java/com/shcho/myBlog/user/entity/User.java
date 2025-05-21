@@ -38,7 +38,6 @@ public class User extends BaseEntity {
     @Column(columnDefinition = "VARCHAR(50)")
     private Role role;
 
-    @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
     public void updateNickname(String newNickname) {
