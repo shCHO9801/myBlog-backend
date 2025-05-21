@@ -160,7 +160,7 @@ class MyPageServiceTest {
 
     @Test
     @DisplayName("회원탈퇴 - 정상 처리 시 deletedAt, username, password, nickname 변경")
-    void deleteNicknameSuccess() {
+    void withdrawSuccess() {
         // given
         Long userId = 1L;
 
