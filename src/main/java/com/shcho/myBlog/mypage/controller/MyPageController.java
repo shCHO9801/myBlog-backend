@@ -49,4 +49,12 @@ public class MyPageController {
         Long userId = userDetails.getUserId();
         return ResponseEntity.ok(myPageService.updatePassword(userId, request.currentPassword(), request.newPassword()));
     }
+
+    @DeleteMapping("/withdraw")
+    public ResponseEntity<String> withdraw(
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        Long userId = userDetails.getUserId();
+        return ResponseEntity.ok(myPageService.withdraw(userId));
+    }
 }
