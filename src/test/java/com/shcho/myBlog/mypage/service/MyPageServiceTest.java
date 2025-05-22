@@ -16,6 +16,7 @@ import static com.shcho.myBlog.libs.exception.ErrorCode.INVALID_PASSWORD;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@DisplayName("마이페이지 서비스 테스트")
 class MyPageServiceTest {
 
     @Mock
@@ -181,6 +182,31 @@ class MyPageServiceTest {
         assertNull(user.getUsername());
         assertEquals("", user.getPassword());
         assertNull(user.getNickname());
+        verify(userRepository).save(user);
+    }
+
+    @Test
+    @DisplayName("프로필 이미지 업데이트 성공")
+    void updateProfileImageSuccess() {
+        // given
+        Long userId = 1L;
+        String newImageUrl = "http://new-image-url";
+
+        User user = User.builder()
+                .username("username")
+                .password("password")
+                .nickname("nickname")
+                .role(Role.USER)
+                .build();
+
+        when(userRepository.getReferenceById(userId)).thenReturn(user);
+
+        // when
+        String result = myPageService.updateProfileImage(userId, newImageUrl);
+
+        // then
+        assertEquals("프로필 사진이 성공적으로 변경되었습니다.", result);
+        assertEquals(newImageUrl, user.getProfileImageUrl());
         verify(userRepository).save(user);
     }
 }

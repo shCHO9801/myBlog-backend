@@ -11,6 +11,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import static com.shcho.myBlog.libs.exception.ErrorCode.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,6 +20,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @DisplayName("파일 업로드 서비스 테스트")
+@ActiveProfiles("test")
 class S3ServiceTest {
 
     @Mock
@@ -29,6 +32,7 @@ class S3ServiceTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+        ReflectionTestUtils.setField(s3Service, "bucket", "shblog");
     }
 
     @Test
