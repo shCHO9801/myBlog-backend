@@ -8,12 +8,14 @@ import lombok.Builder;
 public record GetMyPageResponseDto(
         String username,
         String nickname,
+        String profileImageUrl,
         Role role
 ) {
     public static GetMyPageResponseDto from(User user) {
         return GetMyPageResponseDto.builder()
                 .username(user.getUsername())
                 .nickname(user.getNickname())
+                .profileImageUrl(user.getProfileImageUrl())
                 .role(user.getRole())
                 .build();
     }

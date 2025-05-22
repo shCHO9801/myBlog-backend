@@ -3,6 +3,7 @@ package com.shcho.myBlog.mypage.controller;
 import com.shcho.myBlog.mypage.dto.GetMyPageResponseDto;
 import com.shcho.myBlog.mypage.dto.UpdateNicknameRequestDto;
 import com.shcho.myBlog.mypage.dto.UpdatePasswordRequestDto;
+import com.shcho.myBlog.mypage.dto.UpdateProfileImageRequestDto;
 import com.shcho.myBlog.mypage.service.MyPageService;
 import com.shcho.myBlog.user.service.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -48,6 +49,15 @@ public class MyPageController {
     ) {
         Long userId = userDetails.getUserId();
         return ResponseEntity.ok(myPageService.updatePassword(userId, request.currentPassword(), request.newPassword()));
+    }
+
+    @PatchMapping("/profile-image")
+    public ResponseEntity<String> updateProfileImage(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestBody UpdateProfileImageRequestDto request
+    ) {
+        Long userId = userDetails.getUserId();
+        return ResponseEntity.ok(myPageService.updateProfileImage(userId, request.fileUrl()));
     }
 
     @DeleteMapping("/withdraw")

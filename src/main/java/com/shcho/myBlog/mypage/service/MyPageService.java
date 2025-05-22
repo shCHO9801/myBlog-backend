@@ -52,6 +52,14 @@ public class MyPageService {
         return "비밀번호가 성공적으로 변경되었습니다.";
     }
 
+    public String updateProfileImage(Long userId, String fileUrl) {
+        User user = userRepository.getReferenceById(userId);
+        user.updateProfileImage(fileUrl);
+        userRepository.save(user);
+
+        return "프로필 사진이 성공적으로 변경되었습니다.";
+    }
+
     public String withdraw(Long userId) {
         User user = userRepository.getReferenceById(userId);
         user.withdraw();

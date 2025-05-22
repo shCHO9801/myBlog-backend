@@ -34,6 +34,9 @@ public class User extends BaseEntity {
     @Column(unique = true)
     private String nickname;
 
+    @Column
+    private String profileImageUrl;
+
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(50)")
     private Role role;
@@ -46,6 +49,10 @@ public class User extends BaseEntity {
 
     public void updatePassword(String encodedPassword) {
         this.password = encodedPassword;
+    }
+
+    public void updateProfileImage(String fileUrl) {
+        this.profileImageUrl = fileUrl;
     }
 
     public void withdraw() {
