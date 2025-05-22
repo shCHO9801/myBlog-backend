@@ -2,6 +2,7 @@ package com.shcho.myBlog.common.controller;
 
 import com.shcho.myBlog.common.dto.FileUploadResponseDto;
 import com.shcho.myBlog.common.service.S3Service;
+import com.shcho.myBlog.libs.exception.CustomException;
 import com.shcho.myBlog.user.service.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ public class FileUploadController {
             @RequestParam("type") String type
     ) {
         String username = userDetails.getUsername();
-        return ResponseEntity.ok(s3Service.uploadFile(file, type, username));
+        return ResponseEntity.ok(s3Service.uploadByType(file, type, username));
     }
+
 }

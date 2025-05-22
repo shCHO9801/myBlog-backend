@@ -12,6 +12,9 @@ public enum ErrorCode {
     NICKNAME_ALREADY_EXISTS(400, "이미 사용 중인 닉네임 입니다."),
     DUPLICATE_NICKNAME(400, "중복된 닉네임 입니다."),
     ALREADY_DELETED_USER(400, "이미 탈퇴한 사용자입니다."),
+    INVALID_IMAGE_FORMAT(400, "지원하지 않는 이미지 형식입니다."),
+    INVALID_FILE_FORMAT(400, "지원하지 않는 파일 형식입니다."),
+    INVALID_FILE_TYPE(400, "지원하지 않는 파일 타입입니다."),
 
     /* 401 */
     INVALID_CREDENTIAL(401, "아이디 또는 비밀번호가 올바르지 않습니다."),
