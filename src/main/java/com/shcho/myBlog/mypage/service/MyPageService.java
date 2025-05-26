@@ -31,7 +31,7 @@ public class MyPageService {
         user.updateNickname(nickname);
         userRepository.save(user);
 
-        return user.getNickname();
+        return "닉네임이 성공적으로 변경되었습니다.";
     }
 
     public boolean existsNickname(String nickname) {
