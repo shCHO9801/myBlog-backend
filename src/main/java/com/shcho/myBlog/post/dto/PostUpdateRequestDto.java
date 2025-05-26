@@ -1,6 +1,6 @@
 package com.shcho.myBlog.post.dto;
 
-public record PostCreateRequestDto(
+public record PostUpdateRequestDto(
         String title,
         String content,
         Long categoryId

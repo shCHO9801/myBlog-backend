@@ -38,4 +38,24 @@ public class Post extends BaseEntity {
     public boolean isDeleted(){
         return deletedAt != null;
     }
+
+    public static Post of(String title, String content, Category category, User user) {
+        return Post.builder()
+                .title(title)
+                .content(content)
+                .category(category)
+                .user(user)
+                .deletedAt(null)
+                .build();
+    }
+
+    public void update(String title, String content, Category category) {
+        this.title = title;
+        this.content = content;
+        this.category = category;
+    }
+
+    public void delete() {
+        this.deletedAt = LocalDateTime.now();
+    }
 }
