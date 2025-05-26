@@ -16,6 +16,7 @@ public enum ErrorCode {
     INVALID_FILE_FORMAT(400, "지원하지 않는 파일 형식입니다."),
     INVALID_FILE_TYPE(400, "지원하지 않는 파일 타입입니다."),
     DUPLICATE_CATEGORY(400, "중복된 카테고리명 입니다."),
+    ALREADY_DELETED_POST(400, "이미 삭제된 게시글입니다."),
 
     /* 401 */
     INVALID_CREDENTIAL(401, "아이디 또는 비밀번호가 올바르지 않습니다."),
@@ -25,6 +26,7 @@ public enum ErrorCode {
 
     /* 403 */
     UNAUTHORIZED_CATEGORY_ACCESS(403, "해당 카테고리에 대한 접근 권한이 없습니다."),
+    UNAUTHORIZED_POST_ACCESS(403, "해당 게시글에 대한 접근 권한이 없습니다."),
 
     /* 404 NOT_FOUND */
     USER_NOT_FOUND(404, "유저를 찾을 수 없습니다."),
