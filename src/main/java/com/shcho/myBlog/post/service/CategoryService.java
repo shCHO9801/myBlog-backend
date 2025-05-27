@@ -1,7 +1,6 @@
 package com.shcho.myBlog.post.service;
 
 import com.shcho.myBlog.libs.exception.CustomException;
-import com.shcho.myBlog.libs.exception.ErrorCode;
 import com.shcho.myBlog.post.dto.CategoryResponseDto;
 import com.shcho.myBlog.post.entity.Category;
 import com.shcho.myBlog.post.repository.CategoryRepository;
@@ -13,6 +12,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.shcho.myBlog.libs.exception.ErrorCode.DUPLICATE_CATEGORY;
+import static com.shcho.myBlog.libs.exception.ErrorCode.UNAUTHORIZED_CATEGORY_ACCESS;
+
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
@@ -23,8 +25,8 @@ public class CategoryService {
     public CategoryResponseDto createCategory(Long userId, String name) {
         User user = userRepository.getReferenceById(userId);
 
-        if(categoryRepository.existsByUserIdAndName(user.getId(),name)) {
-            throw new CustomException(ErrorCode.DUPLICATE_CATEGORY);
+        if (categoryRepository.existsByUserIdAndName(user.getId(), name)) {
+            throw new CustomException(DUPLICATE_CATEGORY);
         }
 
         Category category = Category.of(name, user);
@@ -45,8 +47,8 @@ public class CategoryService {
         User user = userRepository.getReferenceById(userId);
         Category category = categoryRepository.getReferenceById(categoryId);
 
-        if(!user.equals(category.getUser())) {
-            throw new CustomException(ErrorCode.UNAUTHORIZED_CATEGORY_ACCESS);
+        if (!user.equals(category.getUser())) {
+            throw new CustomException(UNAUTHORIZED_CATEGORY_ACCESS);
         }
 
         categoryRepository.deleteById(categoryId);
