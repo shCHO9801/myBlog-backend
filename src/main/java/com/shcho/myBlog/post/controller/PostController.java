@@ -1,5 +1,6 @@
 package com.shcho.myBlog.post.controller;
 
+import com.shcho.myBlog.common.dto.PageResponseDto;
 import com.shcho.myBlog.post.dto.PostCreateRequestDto;
 import com.shcho.myBlog.post.dto.PostResponseDto;
 import com.shcho.myBlog.post.dto.PostUpdateRequestDto;
@@ -7,11 +8,11 @@ import com.shcho.myBlog.post.entity.Post;
 import com.shcho.myBlog.post.service.PostService;
 import com.shcho.myBlog.user.service.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/post")
@@ -24,7 +25,7 @@ public class PostController {
     public ResponseEntity<PostResponseDto> createPost(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody PostCreateRequestDto request
-            ) {
+    ) {
         Long userId = userDetails.getUserId();
 
         Post newPost = postService.createPost(userId, request);
@@ -34,17 +35,30 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PostResponseDto>> getPosts(
-            @AuthenticationPrincipal CustomUserDetails userDetails
+    public ResponseEntity<PageResponseDto<PostResponseDto>> getPosts(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(defaultValue = "latest") String sort,
+            Pageable pageable
     ) {
         Long userId = userDetails.getUserId();
 
-        List<Post> response = postService.getPosts(userId);
-        List<PostResponseDto> responseDtoList = response.stream()
-                .map(PostResponseDto::of)
-                .toList();
+        Page<PostResponseDto> filteredPosts = postService.getPosts(userId, null, categoryId, sort, pageable);
 
-        return ResponseEntity.ok(responseDtoList);
+        return ResponseEntity.ok(PageResponseDto.from(filteredPosts));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<PageResponseDto<PostResponseDto>> searchPosts(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestParam String keyword,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(defaultValue = "latest") String sort,
+            Pageable pageable
+    ) {
+        Long userId = userDetails.getUserId();
+        Page<PostResponseDto> searchedPosts = postService.getPosts(userId, keyword, categoryId, sort, pageable);
+        return ResponseEntity.ok(PageResponseDto.from(searchedPosts));
     }
 
     @GetMapping("/{postId}")

@@ -1,20 +1,22 @@
 package com.shcho.myBlog.post.service;
 
 import com.shcho.myBlog.libs.exception.CustomException;
-import com.shcho.myBlog.libs.exception.ErrorCode;
 import com.shcho.myBlog.post.dto.PostCreateRequestDto;
+import com.shcho.myBlog.post.dto.PostResponseDto;
 import com.shcho.myBlog.post.dto.PostUpdateRequestDto;
 import com.shcho.myBlog.post.entity.Category;
 import com.shcho.myBlog.post.entity.Post;
 import com.shcho.myBlog.post.repository.CategoryRepository;
+import com.shcho.myBlog.post.repository.PostQueryDslRepository;
 import com.shcho.myBlog.post.repository.PostRepository;
 import com.shcho.myBlog.user.entity.User;
 import com.shcho.myBlog.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
+import static com.shcho.myBlog.libs.exception.ErrorCode.ALREADY_DELETED_POST;
 import static com.shcho.myBlog.libs.exception.ErrorCode.UNAUTHORIZED_POST_ACCESS;
 
 @Service
@@ -24,6 +26,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+    private final PostQueryDslRepository postQueryDslRepository;
 
     public Post createPost(Long userId, PostCreateRequestDto request) {
         User user = userRepository.getReferenceById(userId);
@@ -53,16 +56,16 @@ public class PostService {
     public Post getPost(Long postId) {
         Post post = postRepository.getReferenceById(postId);
 
-        if(post.isDeleted()) {
-            throw new CustomException(ErrorCode.ALREADY_DELETED_POST);
+        if (post.isDeleted()) {
+            throw new CustomException(ALREADY_DELETED_POST);
         }
 
         return post;
     }
 
-    // TODO : 페이지네이션 구현
-    public List<Post> getPosts(Long userId) {
-        return postRepository.findAllByUserIdAndDeletedAtIsNull(userId);
+    public Page<PostResponseDto> getPosts(Long userId, String keyword, Long categoryId, String sort, Pageable pageable
+    ) {
+        return postQueryDslRepository.findAllByFilter(userId, keyword, categoryId, sort, pageable);
     }
 
     public String deletePost(Long userId, Long postId) {
