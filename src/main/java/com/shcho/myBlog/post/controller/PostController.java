@@ -2,6 +2,7 @@ package com.shcho.myBlog.post.controller;
 
 import com.shcho.myBlog.common.dto.PageResponseDto;
 import com.shcho.myBlog.post.dto.PostCreateRequestDto;
+import com.shcho.myBlog.post.dto.PostListResponseDto;
 import com.shcho.myBlog.post.dto.PostResponseDto;
 import com.shcho.myBlog.post.dto.PostUpdateRequestDto;
 import com.shcho.myBlog.post.entity.Post;
@@ -35,39 +36,25 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<PageResponseDto<PostResponseDto>> getPosts(
-            @AuthenticationPrincipal CustomUserDetails userDetails,
+    public ResponseEntity<PageResponseDto<PostListResponseDto>> getPosts(
+            @RequestParam(required = false) String keyword,
             @RequestParam(required = false) Long categoryId,
             @RequestParam(defaultValue = "latest") String sort,
             Pageable pageable
     ) {
-        Long userId = userDetails.getUserId();
-
-        Page<PostResponseDto> filteredPosts = postService.getPosts(userId, null, categoryId, sort, pageable);
+        Page<PostListResponseDto> filteredPosts = postService.getPosts(keyword, categoryId, sort, pageable);
 
         return ResponseEntity.ok(PageResponseDto.from(filteredPosts));
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<PageResponseDto<PostResponseDto>> searchPosts(
-            @AuthenticationPrincipal CustomUserDetails userDetails,
-            @RequestParam String keyword,
-            @RequestParam(required = false) Long categoryId,
-            @RequestParam(defaultValue = "latest") String sort,
-            Pageable pageable
-    ) {
-        Long userId = userDetails.getUserId();
-        Page<PostResponseDto> searchedPosts = postService.getPosts(userId, keyword, categoryId, sort, pageable);
-        return ResponseEntity.ok(PageResponseDto.from(searchedPosts));
     }
 
     @GetMapping("/{postId}")
     public ResponseEntity<PostResponseDto> getPost(
             @PathVariable Long postId) {
-
         Post getPost = postService.getPost(postId);
 
-        return ResponseEntity.ok(PostResponseDto.of(getPost));
+        PostResponseDto response = PostResponseDto.of(getPost);
+
+        return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/{postId}")

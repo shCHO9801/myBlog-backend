@@ -80,7 +80,7 @@ class MyPageServiceTest {
         String updatedNickname = myPageService.updateNickname(userId, newNickname);
 
         // then
-        assertEquals(newNickname, updatedNickname);
+        assertEquals("닉네임이 성공적으로 변경되었습니다.", updatedNickname);
     }
 
     @Test

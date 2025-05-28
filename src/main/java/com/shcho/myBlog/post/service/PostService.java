@@ -2,7 +2,7 @@ package com.shcho.myBlog.post.service;
 
 import com.shcho.myBlog.libs.exception.CustomException;
 import com.shcho.myBlog.post.dto.PostCreateRequestDto;
-import com.shcho.myBlog.post.dto.PostResponseDto;
+import com.shcho.myBlog.post.dto.PostListResponseDto;
 import com.shcho.myBlog.post.dto.PostUpdateRequestDto;
 import com.shcho.myBlog.post.entity.Category;
 import com.shcho.myBlog.post.entity.Post;
@@ -63,9 +63,10 @@ public class PostService {
         return post;
     }
 
-    public Page<PostResponseDto> getPosts(Long userId, String keyword, Long categoryId, String sort, Pageable pageable
+    public Page<PostListResponseDto> getPosts(String keyword, Long categoryId, String sort, Pageable pageable
     ) {
-        return postQueryDslRepository.findAllByFilter(userId, keyword, categoryId, sort, pageable);
+        String processKeyword = (keyword == null || keyword.isBlank()) ? null : keyword.trim();
+        return postQueryDslRepository.findAllByFilter(processKeyword, categoryId, sort, pageable);
     }
 
     public String deletePost(Long userId, Long postId) {

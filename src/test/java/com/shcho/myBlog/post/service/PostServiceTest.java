@@ -2,7 +2,7 @@ package com.shcho.myBlog.post.service;
 
 import com.shcho.myBlog.libs.exception.CustomException;
 import com.shcho.myBlog.post.dto.PostCreateRequestDto;
-import com.shcho.myBlog.post.dto.PostResponseDto;
+import com.shcho.myBlog.post.dto.PostListResponseDto;
 import com.shcho.myBlog.post.dto.PostUpdateRequestDto;
 import com.shcho.myBlog.post.entity.Category;
 import com.shcho.myBlog.post.entity.Post;
@@ -237,26 +237,24 @@ class PostServiceTest {
         String sort = "latest";
         Long categoryId = null;
 
-        Page<PostResponseDto> mockPage = new PageImpl<>(
+        Page<PostListResponseDto> mockPage = new PageImpl<>(
                 List.of(
-                        PostResponseDto.of(Post.of("제목", "내용", category, user)),
-                        PostResponseDto.of(Post.of("제목2", "내용2", category, user))
+                        PostListResponseDto.of(Post.of("제목", "내용", category, user)),
+                        PostListResponseDto.of(Post.of("제목2", "내용2", category, user))
                 )
         );
 
-        when(postQueryDslRepository.findAllByFilter(user.getId(), keyword, categoryId, sort, pageable))
+        when(postQueryDslRepository.findAllByFilter(keyword, categoryId, sort, pageable))
                 .thenReturn(mockPage);
 
         // when
-        Page<PostResponseDto> result = postService.getPosts(user.getId(), keyword, categoryId, sort, pageable);
+        Page<PostListResponseDto> result = postService.getPosts(keyword, categoryId, sort, pageable);
 
         // then
         assertNotNull(result);
         assertEquals(2, result.getTotalElements());
         assertEquals("제목", result.getContent().get(0).title());
         assertEquals("제목2", result.getContent().get(1).title());
-        assertEquals("내용", result.getContent().get(0).content());
-        assertEquals("내용2", result.getContent().get(1).content());
     }
 
     @Test
