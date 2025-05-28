@@ -1,6 +1,5 @@
 package com.shcho.myBlog.post.dto;
 
-import com.shcho.myBlog.post.entity.Category;
 import com.shcho.myBlog.post.entity.Post;
 import lombok.Builder;
 
@@ -11,7 +10,7 @@ public record PostResponseDto(
         Long postId,
         String title,
         String content,
-        Category category,
+        String categoryName,
         Long userId,
         LocalDateTime createdAt
 ) {
@@ -20,7 +19,7 @@ public record PostResponseDto(
                 .postId(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
-                .category(post.getCategory())
+                .categoryName(post.getCategory().getName())
                 .userId(post.getUser().getId())
                 .createdAt(post.getCreatedAt())
                 .build();
