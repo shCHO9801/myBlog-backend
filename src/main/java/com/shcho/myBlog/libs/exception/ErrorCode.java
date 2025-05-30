@@ -27,11 +27,13 @@ public enum ErrorCode {
     UNAUTHORIZED_CATEGORY_ACCESS(403, "해당 카테고리에 대한 접근 권한이 없습니다."),
     UNAUTHORIZED_POST_ACCESS(403, "해당 게시글에 대한 접근 권한이 없습니다."),
     UNAUTHORIZED_COMMENT_ACCESS(403, "해당 댓글에 대한 접근 권한이 없습니다."),
+    UNAUTHORIZED_REPLY_ACCESS(403, "해당 대댓글에 대한 접근 권한이 없습니다."),
 
     /* 404 NOT_FOUND */
     USER_NOT_FOUND(404, "유저를 찾을 수 없습니다."),
     ALREADY_DELETED_POST(404, "이미 삭제된 게시글입니다."),
     ALREADY_DELETED_COMMENT(404, "이미 삭제된 댓글입니다."),
+    ALREADY_DELETED_REPLY(404, "이미 삭제된 대댓글입니다."),
 
     /* 500 INTERNAL_SERVER_ERROR */
     INTERNAL_SERVER_ERROR(500, "서버 오류가 발생했습니다."),
