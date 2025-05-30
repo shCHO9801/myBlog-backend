@@ -1,10 +1,14 @@
 package com.shcho.myBlog.comment.service;
 
+import com.shcho.myBlog.comment.dto.CommentDeleteRequestDto;
 import com.shcho.myBlog.comment.dto.CommentCreateRequestDto;
+import com.shcho.myBlog.comment.dto.CommentUpdateRequestDto;
 import com.shcho.myBlog.comment.dto.CommentWithRepliesDto;
 import com.shcho.myBlog.comment.dto.ReplyResponseDto;
 import com.shcho.myBlog.comment.entity.Comment;
 import com.shcho.myBlog.comment.repository.CommentRepository;
+import com.shcho.myBlog.libs.exception.CustomException;
+import com.shcho.myBlog.libs.exception.ErrorCode;
 import com.shcho.myBlog.post.entity.Post;
 import com.shcho.myBlog.post.repository.PostRepository;
 import com.shcho.myBlog.user.entity.Role;
@@ -65,5 +69,49 @@ public class CommentService {
                     .toList();
             return CommentWithRepliesDto.from(comment, repliesDto);
         });
+    }
+
+    @Transactional
+    public Comment updateComment(CustomUserDetails userDetails, Long commentId, CommentUpdateRequestDto request) {
+        Comment comment = getCommentById(commentId);
+
+        checkWriter(comment, userDetails, request.anonymousPassword());
+
+        comment.update(request.content());
+        return comment;
+    }
+
+    @Transactional
+    public Comment deleteComment(CustomUserDetails userDetails, Long commentId, CommentDeleteRequestDto request) {
+        Comment comment = getCommentById(commentId);
+
+        checkWriter(comment, userDetails, request.anonymousPassword());
+
+        comment.delete();
+        return comment;
+    }
+
+    private Comment getCommentById(Long commentId) {
+        Comment comment = commentRepository.getReferenceById(commentId);
+
+        if (comment.isDeleted()) {
+            throw new CustomException(ErrorCode.ALREADY_DELETED_COMMENT);
+        }
+
+        return comment;
+    }
+
+    private void checkWriter(Comment comment, CustomUserDetails userDetails, String anonymousPassword) {
+        if (userDetails != null) {
+            User user = userRepository.getReferenceById(userDetails.getUserId());
+
+            if (!user.getId().equals(comment.getUser().getId())) {
+                throw new CustomException(ErrorCode.UNAUTHORIZED_COMMENT_ACCESS);
+            }
+        } else {
+            if (anonymousPassword == null || !passwordEncoder.matches(anonymousPassword, comment.getUser().getPassword())) {
+                throw new CustomException(ErrorCode.UNAUTHORIZED_COMMENT_ACCESS);
+            }
+        }
     }
 }
