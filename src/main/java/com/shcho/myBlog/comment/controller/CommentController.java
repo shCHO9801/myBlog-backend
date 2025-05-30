@@ -1,8 +1,6 @@
 package com.shcho.myBlog.comment.controller;
 
-import com.shcho.myBlog.comment.dto.CommentCreateRequestDto;
-import com.shcho.myBlog.comment.dto.CommentResponseDto;
-import com.shcho.myBlog.comment.dto.CommentWithRepliesDto;
+import com.shcho.myBlog.comment.dto.*;
 import com.shcho.myBlog.comment.entity.Comment;
 import com.shcho.myBlog.comment.service.CommentService;
 import com.shcho.myBlog.common.dto.PageResponseDto;
@@ -40,5 +38,25 @@ public class CommentController {
         Page<CommentWithRepliesDto> commentsWithReplies = commentService.getCommentsWithReplies(postId, pageable);
 
         return ResponseEntity.ok(PageResponseDto.from(commentsWithReplies));
+    }
+
+    @PatchMapping("/{commentId}")
+    public ResponseEntity<CommentResponseDto> updateComment(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable Long commentId,
+            @Valid @RequestBody CommentUpdateRequestDto request
+    ) {
+        Comment updatedComment = commentService.updateComment(userDetails, commentId, request);
+        return ResponseEntity.ok(CommentResponseDto.from(updatedComment));
+    }
+
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<CommentResponseDto> deleteComment(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable Long commentId,
+            @RequestBody CommentDeleteRequestDto request
+    ) {
+        Comment deletedComment = commentService.deleteComment(userDetails, commentId, request);
+        return ResponseEntity.ok(CommentResponseDto.from(deletedComment));
     }
 }
