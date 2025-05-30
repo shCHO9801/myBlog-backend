@@ -43,6 +43,7 @@ public class CommentController {
     @PatchMapping("/{commentId}")
     public ResponseEntity<CommentResponseDto> updateComment(
             @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable Long postId,
             @PathVariable Long commentId,
             @Valid @RequestBody CommentUpdateRequestDto request
     ) {
@@ -53,10 +54,11 @@ public class CommentController {
     @DeleteMapping("/{commentId}")
     public ResponseEntity<CommentResponseDto> deleteComment(
             @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable Long postId,
             @PathVariable Long commentId,
             @RequestBody CommentDeleteRequestDto request
     ) {
-        Comment deletedComment = commentService.deleteComment(userDetails, commentId, request);
-        return ResponseEntity.ok(CommentResponseDto.from(deletedComment));
+        commentService.deleteComment(userDetails, commentId, request);
+        return ResponseEntity.noContent().build();
     }
 }

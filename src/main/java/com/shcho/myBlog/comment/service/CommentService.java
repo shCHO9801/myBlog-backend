@@ -82,13 +82,12 @@ public class CommentService {
     }
 
     @Transactional
-    public Comment deleteComment(CustomUserDetails userDetails, Long commentId, CommentDeleteRequestDto request) {
+    public void deleteComment(CustomUserDetails userDetails, Long commentId, CommentDeleteRequestDto request) {
         Comment comment = getCommentById(commentId);
 
         checkWriter(comment, userDetails, request.anonymousPassword());
 
         comment.delete();
-        return comment;
     }
 
     private Comment getCommentById(Long commentId) {
