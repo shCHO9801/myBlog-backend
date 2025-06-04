@@ -29,9 +29,17 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/auth/**",
                                 "/swagger-ui/**",
-                                "/v3/api-docs/**"
+                                "/v3/api-docs/**",
+                                "/api/post",
+                                "/api/post/**",
+                                "/api/post/*/comments",
+                                "/api/comments/*/replies",
+                                "/api/posts/*/comments/*"
                         ).permitAll()
-                        .requestMatchers("/api/mypage").authenticated()
+                        .requestMatchers(
+                                "/api/mypage",
+                                "/api/files/upload"
+                        ).authenticated()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex
