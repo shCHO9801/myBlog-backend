@@ -27,7 +27,7 @@ jobs:
         run: ./gradlew clean bootJar -x test
 
       - name: Get short SHA
-        id: git-meta
+        id: meta
         run: echo "short_sha=$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_OUTPUT
 
       - name: Log in to Docker Hub
@@ -44,7 +44,7 @@ jobs:
           push: true
           tags: |
             ${{ env.REGISTRY }}/${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
-            ${{ env.REGISTRY }}/${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.short_sha }}
+            ${{ env.REGISTRY }}/${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.git-meta.outputs.short_sha }}
 
   deploy-to-nas:
     needs: build-and-push
