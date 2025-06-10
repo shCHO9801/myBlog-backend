@@ -72,7 +72,7 @@ jobs:
 
       - name: Copy .env to NAS
         run: |
-          scp -P ${{ secrets.NAS_PORT }} .env ${{ secrets.NAS_USER }}@${{ secrets.NAS_HOST }}:/volume1/web/myblog-backend/.env
+          scp -P ${{ secrets.NAS_PORT }} .env ${{ secrets.NAS_USER }}@${{ secrets.NAS_HOST }}:/volume1/web/myBlog-backend/.env
 
       - name: Deploy on NAS
         run: |
@@ -82,8 +82,8 @@ jobs:
               ${{ secrets.NAS_USER }}@${{ secrets.NAS_HOST }} << EOF
             set -e
 
-            mkdir -p /volume1/web/myblog-backend
-            cd /volume1/web/myblog-backend
+            mkdir -p /volume1/web/myBlog-backend
+            cd /volume1/web/myBlog-backend
 
             echo "Pulling \$IMAGE"
             docker pull \$IMAGE
