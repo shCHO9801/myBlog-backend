@@ -40,3 +40,4 @@ out/
 .env
 /src/main/generated/
 1.env
+*.env
