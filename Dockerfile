@@ -1,5 +1,5 @@
 # ── Dockerfile ──
-FROM eclipse-temurin:17-jdk-alpine
+FROM eclipse-temurin:17-jdk
 
 # JAR 빌드 결과물을 복사
 ARG JAR_FILE=build/libs/*.jar
