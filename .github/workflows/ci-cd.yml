@@ -13,7 +13,7 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
     outputs:
-      tag: ${{ steps.git-meta.outputs.short_sha }}
+      tag: ${{ steps.meta.outputs.short_sha }}
     steps:
       - uses: actions/checkout@v3
 
@@ -61,19 +61,32 @@ jobs:
           echo "${{ secrets.SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
 
+      - name: Create .env file
+        run: |
+          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" > .env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+          echo "MINIO_URL=${{ secrets.MINIO_URL }}" >> .env
+          echo "MINIO_ACCESS_KEY=${{ secrets.MINIO_ACCESS_KEY }}" >> .env
+          echo "MINIO_SECRET_KEY=${{ secrets.MINIO_SECRET_KEY }}" >> .env
+
+      - name: Copy .env to NAS
+        run: |
+          scp -P ${{ secrets.NAS_PORT }} .env ${{ secrets.NAS_USER }}@${{ secrets.NAS_HOST }}:/volume1/web/myblog-backend/.env
+
       - name: Deploy on NAS
         run: |
-          IMAGE=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.build-and-push.outputs.tag }}
+          IMAGE=${{ env.REGISTRY }}/${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ needs.build-and-push.outputs.tag }}
           ssh -o StrictHostKeyChecking=no \
               -p ${{ secrets.NAS_PORT }} \
-              ${{ secrets.NAS_USER }}@${{ secrets.NAS_HOST }} << 'EOF'
+              ${{ secrets.NAS_USER }}@${{ secrets.NAS_HOST }} << EOF
             set -e
-            
+
             mkdir -p /volume1/web/myblog-backend
             cd /volume1/web/myblog-backend
 
-            echo "Pulling $IMAGE"
-            docker pull $IMAGE
+            echo "Pulling \$IMAGE"
+            docker pull \$IMAGE
 
             echo "Stopping old container"
             docker stop myblog || true
@@ -85,7 +98,7 @@ jobs:
               --env-file .env \
               -e SPRING_PROFILES_ACTIVE=dev \
               -p 8080:8080 \
-              $IMAGE
+              \$IMAGE
 
-            echo "✅ Deployed at $(date)"
+            echo "✅ Deployed at \$(date)"
           EOF
