@@ -76,11 +76,12 @@ jobs:
 
       - name: Deploy on NAS
         run: |
-          IMAGE=${{ env.REGISTRY }}/${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ needs.build-and-push.outputs.tag }}
           ssh -o StrictHostKeyChecking=no \
               -p ${{ secrets.NAS_PORT }} \
               ${{ secrets.NAS_USER }}@${{ secrets.NAS_HOST }} << EOF
             set -e
+
+            IMAGE=${{ env.REGISTRY }}/${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ needs.build-and-push.outputs.tag }}
 
             mkdir -p /volume1/web/myblog-backend
             cd /volume1/web/myblog-backend
