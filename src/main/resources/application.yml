@@ -32,7 +32,3 @@ logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.type.descriptor.sql: trace
-springdoc:
-  swagger-ui:
-    config-url: /v3/api-docs/swagger-config
-    path: /swagger-ui.html
