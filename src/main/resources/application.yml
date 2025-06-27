@@ -5,7 +5,7 @@ spring:
     import: optional:dotenv:.env
 
   datasource:
-    url: jdbc:mariadb://csh980116.synology.me:3306/shBlog
+    url: jdbc:mariadb://csh980116.synology.me:3307/shBlog
     driver-class-name: org.mariadb.jdbc.Driver
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
